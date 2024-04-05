@@ -21,7 +21,7 @@
 - Система оценок
 
 ---
-## Реальзация на Python
+## Реализация на Python
 - RestAPI
 - Flask
 - Sqlalchemy
