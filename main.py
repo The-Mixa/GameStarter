@@ -32,7 +32,7 @@ def bad_request(_):
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    return db_sess.get(User, user_id)
 
 def main():
     db_session.global_init("db/games.sqlite")
@@ -75,7 +75,7 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(
-            User.email == form.email.data).first()
+            User.email == form.email_or_nickname.data or User.nickname == form.email_or_nickname.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
