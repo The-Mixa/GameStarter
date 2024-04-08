@@ -16,7 +16,7 @@ class User(SqlAlchemyBase, SerializerMixin):
     favorites = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    games_when_collaborate = orm.relationship('Game', back_populates='collaborators')
+    games_when_collaborate = orm.relationship('Game', backref='collaborator', secondary="association")
     games = orm.relationship("Game", back_populates='user')
 
     def set_password(self, password):
