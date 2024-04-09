@@ -24,6 +24,7 @@ login_manager.init_app(app)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
+#asdf
 
 @app.errorhandler(400)
 def bad_request(_):
