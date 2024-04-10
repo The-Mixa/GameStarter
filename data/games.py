@@ -22,4 +22,6 @@ class Game(SqlAlchemyBase, SerializerMixin):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     collaborators = orm.relationship('User', backref='game_when_collaborate', secondary="association")                     
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    
     user = orm.relationship('User')
+    comments = orm.relationship('Comment', back_populates='game')

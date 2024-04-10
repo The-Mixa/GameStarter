@@ -18,6 +18,7 @@ class User(SqlAlchemyBase, SerializerMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     games_when_collaborate = orm.relationship('Game', backref='collaborator', secondary="association")
     games = orm.relationship("Game", back_populates='user')
+    comments = orm.relationship('Comment', back_populates='user')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
