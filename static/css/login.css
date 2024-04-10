@@ -1,13 +1,23 @@
-h1{
-text-align: center;
-padding-top: 30%;
+h1 {
+    text-align: center;
 }
-form{
-max-width: 50%;
-margin-right: auto;
-margin-left: auto;
+
+.submit-button {
+    margin-right: auto;
+    margin-left: auto;
 }
-.submit-button{
-margin-right: auto;
-margin-left: auto;
+
+.content {
+    background-color: #444;
+    max-width: 500px;
+    display: flexbox;
+    margin: auto;
+    padding: 50px;
+    color: lightgray;
+    border-radius: 15px;
+    margin-top: 10vh;
+}
+
+body {
+    background-color: #333;
 }

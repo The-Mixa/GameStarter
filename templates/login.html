@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="content">
     <h1>Авторизация</h1>
     <link rel="stylesheet" href="/static/css/login.css">
     <form action="" method="post">
@@ -9,23 +10,24 @@
             {{ form.email_or_nickname.label }}<br>
             {{ form.email_or_nickname(class="form-control") }}<br>
             {% for error in form.email_or_nickname.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
         </p>
         <p>
             {{ form.password.label }}<br>
             {{ form.password(class="form-control", type="password") }}<br>
             {% for error in form.password.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>Нет аккаунта? <a href="register">Зарегестрироваться</a></p>
         <p>{{ form.submit(type="submit", class="btn btn-primary")}}</p>
         <div>{{ message }}</div>
     </form>
+</div>
 {% endblock %}
