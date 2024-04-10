@@ -37,7 +37,7 @@ def load_user(user_id):
 
 def main():
     db_session.global_init("db/games.sqlite")
-    app.run('127.0.0.1', port=800)
+    app.run('127.0.0.1', port=800, debug=True)
 
 
 @app.route('/register', methods=['GET', 'POST'])

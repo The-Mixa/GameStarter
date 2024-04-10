@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>Авторизация</h1>
+    <link rel="stylesheet" href="/static/css/login.css">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -23,7 +24,8 @@
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <p>Нет аккаунта? <a href="register">Зарегестрироваться</a></p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary")}}</p>
         <div>{{ message }}</div>
     </form>
 {% endblock %}
