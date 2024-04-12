@@ -133,4 +133,3 @@ def make_reaction_to_game(game_id: int, user_id: int, type: str) -> None:
 
 if __name__ == '__main__':
     main()
-
