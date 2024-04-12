@@ -85,7 +85,7 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(
-            User.email == form.email_or_nickname.data or User.nickname == form.email_or_nickname.data).first()
+            (User.email == form.email_or_nickname.data) | (User.nickname == form.email_or_nickname.data)).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
