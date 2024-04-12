@@ -36,11 +36,6 @@ def load_user(user_id):
     return db_sess.get(User, user_id)
 
 
-def main():
-    db_session.global_init("db/games.sqlite")
-    app.run('127.0.0.1', port=800, debug=True)
-
-
 @app.route('/')
 def index():
     if not current_user.is_authenticated:
@@ -129,6 +124,11 @@ def make_reaction_to_game(game_id: int, user_id: int, type: str) -> None:
     elif type == 'dislike':
         user.comment_dislikes.append(game)
         game.dislikes += 1
+
+
+def main():
+    db_session.global_init("db/games.sqlite")
+    app.run('127.0.0.1', port=800, debug=True)
 
 
 if __name__ == '__main__':
