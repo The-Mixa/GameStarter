@@ -41,6 +41,18 @@ def main():
     app.run('127.0.0.1', port=800, debug=True)
 
 
+@app.route('/')
+def index():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    return render_template('index.html', title='GameStarter')
+        
+
+@app.route('/preview')
+def preview():
+    return render_template('preview.html', title='Обзор')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
