@@ -78,6 +78,12 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
+@app.route('/profile/<int:user_id>')
+def profile(user_id: int):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == user_id).first()
+    return render_template('profile.html', title='Профиль', user=user)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

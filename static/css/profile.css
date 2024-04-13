@@ -1,0 +1,35 @@
+.info img {
+    width: 300px;
+    border-radius: 50%;
+}
+
+.info {
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin-bottom: 10vh;
+}
+
+.text h1 {
+    font-size: 120px;
+}
+
+.text h2 {
+    font-size: 50px;
+    color: #888
+}
+
+.text h3 {
+    font-size: 50px;
+}
+
+.info .text {
+    margin-left: 70px;
+}
+
+.buttons {
+    position: relative;
+    top: 140px;
+    left: 40vw;
+}

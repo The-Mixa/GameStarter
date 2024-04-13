@@ -18,6 +18,7 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     games_when_collaborate = orm.relationship('Game', backref='collaborator', secondary="association")
+    profile_image = sqlalchemy.Column(sqlalchemy.String, default='/static/profile_images/default.png')
     
     games = orm.relationship("Game", back_populates='user')
     comments = orm.relationship('Comment', back_populates='user')
