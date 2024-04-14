@@ -8,6 +8,9 @@
     <div class="text">
         <h1>{{user.nickname}}</h1>
         <h2>{{user.name}}</h2>
+        {%if user == current_user %}
+        <a class="btn btn-outline-danger outbutton" href="/" role="button">Выйти из аккаунта</a>
+        {% endif %}
     </div>
 </div>
 <div class="games">
@@ -18,7 +21,6 @@
         <h3>Игры</h3>
         {% endif %}
     </div>
-    <p>Пока что игр не будет тут, не сделал</p>
 </div>
 
 {% endblock %}
