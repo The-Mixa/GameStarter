@@ -11,33 +11,36 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">GameStarter</a>
 
             {% if current_user.is_authenticated %}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown ms-auto">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            {{current_user.nickname}}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/profile/{{current_user.nickname}}">Профиль</a></li>
-                            <li><a class="dropdown-item" href="/logout">Выйти</a></li>
-                        </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/#">Добавить игру</a>
                     </li>
+                    {% if current_user.id == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/#">Модерация</a>
+                    </li>
+                    {% endif %}
                 </ul>
+                
             </div>
-        </div>
-        {% endif %}
+            <div class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/profile/{{current_user.nickname}}">{{current_user.nickname}}</a>
+                </li>
+            </div>
+            {% endif %}
+        </div>   
     </nav>
 </header>
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
-{{message}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
