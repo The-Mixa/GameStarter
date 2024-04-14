@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request
 from flask import make_response, jsonify, abort
+from werkzeug.utils import secure_filename
 
 from data import db_session
 
@@ -67,21 +68,41 @@ def reqister():
                                    form=form,
                                    message="Пользователь с таким никнеймом уже есть")
         
+
         user = User(
             name=f'{form.name.data} {form.surname.data}',
             email=form.email.data,
             nickname=form.nickname.data
         )
+
         user.set_password(form.password.data)
         db_sess.add(user)
+        db_sess.commit()
+
+        user = db_sess.query(User).filter(User.nickname == form.nickname.data).first()
+
+        if 'file' in request.files:
+            f = request.files['file']
+            if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
+                file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
+                file.close()
+                f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
+                user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
+            else:
+                return render_template('register.html', title='Регистрация',
+                                       form=form,
+                                       message="Файл не является изображением")
+        else:
+            user.profile_image = '/static/profile_images/default.png'
+
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
-@app.route('/profile/<int:user_id>')
-def profile(user_id: int):
+@app.route('/profile/<nickname>')
+def profile(nickname: str):
     db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.id == user_id).first()
+    user = db_sess.query(User).filter(User.nickname == nickname).first()
     return render_template('profile.html', title='Профиль', user=user)
 
 
