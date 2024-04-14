@@ -19,29 +19,12 @@
             {{ form.nickname.label }}<br>
             {{ form.nickname(class="form-control") }}<br>
             {% for error in form.nickname.errors %}
-        <p class="alert alert-danger" role="alert">
-            {{ error }}
-        </p>
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
         {% endfor %}
         </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password") }}<br>
-            {% for error in form.password.errors %}
-        <p class="alert alert-danger" role="alert">
-            {{ error }}
-        </p>
-        {% endfor %}
-        </p>
-        <p>
-            {{ form.password_again.label }}<br>
-            {{ form.password_again(class="form-control", type="password") }}<br>
-            {% for error in form.password_again.errors %}
-        <p class="alert alert-danger" role="alert">
-            {{ error }}
-        </p>
-        {% endfor %}
-        </p>
+        
         <p>
             {{ form.name.label }}<br>
             {{ form.name(class="form-control") }}<br>
@@ -59,16 +42,8 @@
             {{ error }}
         </p>
         {% endfor %}
-        </p>
-
-        <div class="form-group">
-            <label for="photo">Выберите аватар</label>
-            <input type="file" class="form-control-file" id="file" name="file">
-        </div>
-
+    </p>
         <p style="margin-top: 20px">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
-        <p>Уже есть аккаунт? <a href="login">Войти</a></p>
-
         {{message}}
     </form>
 </div>

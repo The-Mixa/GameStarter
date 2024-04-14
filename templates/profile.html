@@ -1,40 +1,43 @@
 {% extends "base.html" %}
 {% block content%}
 {% if not user %}
-    <div class="buttons">
-        <a class="btn btn-primary" href="/" role="button">На главную</a>
+<div class="buttons">
+    <a class="btn btn-primary" href="/" role="button">На главную</a>
+</div>
+<div class="info"">
+        <img src=" /static/profile_images/sad_hamster.jpg" alt="Очень грустная картинка">
+    <div class="text">
+        <h2>Пользователя с таким никнеймом не существует</h2>
+        <h3>Нам очень жаль</h2>
     </div>
-    <div class="info"">
-        <img src="/static/profile_images/sad_hamster.jpg" alt="Очень грустная картинка">
-        <div class="text">
-            <h2>Пользователя с таким никнеймом не существует</h2>
-            <h3>Нам очень жаль</h2>
-        </div>
-        
-    </div>
+
+</div>
 {% else %}
-    <div class="buttons">
-        <a class="btn btn-primary" href="/" role="button">На главную</a>
-    </div>
-    <div class="info">
-        <img src="{{user.profile_image}}">
-        <div class="text">
-            <h1>{{user.nickname}}</h1>
-            <h2>{{user.name}}</h2>
-            {%if user == current_user %}
-            <a class="btn btn-outline-danger outbutton" href="/" role="button">Выйти из аккаунта</a>
-            {% endif %}
+<div class="buttons">
+    <a class="btn btn-primary" href="/" role="button">На главную</a>
+</div>
+<div class="info">
+    <img src="{{user.profile_image}}">
+    <div class="text">
+        <h1>{{user.nickname}}</h1>
+        <h2>{{user.name}}</h2>
+        {%if user == current_user %}
+        <div class="buttons-out-edit">
+            <a class="btn btn-outline-primary outbutton" href="/profile/edit" role="button">Редактировать</a>
+            <a class="btn btn-outline-danger outbutton" href="/logout" role="button">Выйти из аккаунта</a>
         </div>
+        {% endif %}
     </div>
-    <div class="games">
-        <div class="text">
-            {% if user == current_user %}
-            <h3>Ваши Игры</h3>
-            {% else %}
-            <h3>Игры</h3>
-            {% endif %}
-        </div>
+</div>
+<div class="games">
+    <div class="text">
+        {% if user == current_user %}
+        <h3>Ваши Игры</h3>
+        {% else %}
+        <h3>Игры</h3>
+        {% endif %}
     </div>
+</div>
 {% endif %}
 
 {% endblock %}

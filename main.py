@@ -1,7 +1,5 @@
 from flask import Flask, render_template, redirect, request
-from flask import make_response, jsonify, abort
-from werkzeug.utils import secure_filename
-
+from flask import make_response, jsonify
 from data import db_session
 
 from data.users import User
@@ -12,6 +10,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 
 from forms.login import LoginForm
 from forms.user import RegisterForm
+from forms.profile_edit import ProfileEditForm
 
 
 app = Flask(__name__)
@@ -52,12 +51,13 @@ def preview():
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
+    db_sess = db_session.create_session()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пароли не совпадают")
-        db_sess = db_session.create_session()
+        
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
@@ -104,6 +104,43 @@ def profile(nickname: str):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.nickname == nickname).first()
     return render_template('profile.html', title='Профиль', user=user)
+
+
+@app.route('/profile/edit', methods=['POST', 'GET'])
+def profile_edit():
+    form = ProfileEditForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        form.name.data = user.name.split()[0]
+        form.surname.data = user.name.split()[1]
+        form.email.data = user.email
+        form.nickname.data = user.nickname
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        if form.email.data != user.email:
+            if db_sess.query(User).filter(User.email == form.email.data).first():
+                return render_template('edit_profile.html', title='Редактирование профиля',
+                                    form=form,
+                                    message="Такой пользователь уже есть, выберите другую почту")
+        if form.nickname.data != user.nickname:
+            if db_sess.query(User).filter(User.nickname == form.nickname.data).first():
+                return render_template('edit_profile.html', title='Редактирование профиля',
+                                    form=form,
+                                    message="Пользователь с таким никнеймом уже есть")
+        
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        user.name = f'{form.name.data} {form.surname.data}'
+        user.email = form.email.data
+        user.nickname = form.nickname.data
+        db_sess.commit()
+        return redirect(f'/profile/{form.nickname.data}')
+
+    return render_template('edit_profile.html',
+                           title='Редактирование профиля',
+                           form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

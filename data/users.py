@@ -23,10 +23,10 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     games = orm.relationship("Game", back_populates='user')
     comments = orm.relationship('Comment', back_populates='user')
 
-    games_likes = orm.relationship('Game', back_populates='user')
-    games_dislikes = orm.relationship('Game', back_populates='user')
-    comment_likes = orm.relationship('Comment', back_populates='user')
-    comment_dislikes = orm.relationship('Comment', back_populates='user')
+    games_likes = orm.relationship('Game', overlaps="games_dislikes")
+    games_dislikes = orm.relationship('Game', overlaps="games_likes")
+    comment_likes = orm.relationship('Comment', overlaps="comments_dislikes")
+    comment_dislikes = orm.relationship('Comment', overlaps="comment_likes")
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
