@@ -1,24 +1,38 @@
 {% extends "base.html" %}
 {% block content%}
-<div class="buttons">
-    <a class="btn btn-primary" href="/" role="button">На главную</a>
-</div>
-<div class="info">
-    <img src="{{user.profile_image}}">
-    <div class="text">
-        <h1>{{user.nickname}}</h1>
-        <h2>{{user.name}}</h2>
+{% if not user %}
+    <div class="buttons">
+        <a class="btn btn-primary" href="/" role="button">На главную</a>
     </div>
-</div>
-<div class="games">
-    <div class="text">
-        {% if user == current_user %}
-        <h3>Ваши Игры</h3>
-        {% else %}
-        <h3>Игры</h3>
-        {% endif %}
+    <div class="info"">
+        <img src="/static/profile_images/sad_hamster.jpg" alt="Очень грустная картинка">
+        <div class="text">
+            <h2>Пользователя с таким никнеймом не существует</h2>
+            <h3>Нам очень жаль</h2>
+        </div>
+        
     </div>
-    <p>Пока что игр не будет тут, не сделал</p>
-</div>
+{% else %}
+    <div class="buttons">
+        <a class="btn btn-primary" href="/" role="button">На главную</a>
+    </div>
+    <div class="info">
+        <img src="{{user.profile_image}}">
+        <div class="text">
+            <h1>{{user.nickname}}</h1>
+            <h2>{{user.name}}</h2>
+        </div>
+    </div>
+    <div class="games">
+        <div class="text">
+            {% if user == current_user %}
+            <h3>Ваши Игры</h3>
+            {% else %}
+            <h3>Игры</h3>
+            {% endif %}
+        </div>
+        <p>Пока что игр не будет тут, не сделал</p>
+    </div>
+{% endif %}
 
 {% endblock %}

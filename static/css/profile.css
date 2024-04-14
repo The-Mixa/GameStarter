@@ -30,7 +30,7 @@
 }
 
 .buttons {
-    position: relative;
-    top: 140px;
-    left: 40vw;
+    position: fixed;
+    top: 100px;
+    right: 30px;
 }
