@@ -11,6 +11,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from forms.profile_edit import ProfileEditForm
+from forms.add_game import AddGameForm
 
 
 app = Flask(__name__)
@@ -166,6 +167,21 @@ def logout():
     return redirect("/")
 
 
+@app.route('/add_game', methods=['GET', 'POST'])
+def add_game():
+    form = AddGameForm()
+    # if form.validate_on_submit():
+    #     db_sess = db_session.create_session()
+    #     game = Game(
+    #         title=form.title.data,
+    #         description=form.description.data
+    #     )
+    #     db_sess.add(game)
+    #     db_sess.commit()
+    #     return redirect(f'/game/{game.id}')
+    return render_template('add_game.html', title='Добавление игры', form=form)
+
+
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:
     db_sess = db_session.create_session()
     comment = db_sess.query(Comment).filter(Comment.id == comment_id).first()
@@ -197,3 +213,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+ 
