@@ -68,7 +68,6 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пользователь с таким никнеймом уже есть")
-        
 
         user = User(
             name=f'{form.name.data} {form.surname.data}',
