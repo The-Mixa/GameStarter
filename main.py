@@ -82,19 +82,24 @@ def reqister():
 
         user = db_sess.query(User).filter(User.nickname == form.nickname.data).first()
 
-        if 'file' in request.files:
-            f = request.files['file']
-            if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
-                file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
-                file.close()
-                f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
-                user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
-            else:
-                return render_template('register.html', title='Регистрация',
-                                       form=form,
-                                       message="Файл не является изображением")
-        else:
-            user.profile_image = '/static/profile_images/default.png'
+        # if 'file' in request.files:
+        #     f = request.files['file']
+        #     if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
+        #         file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
+        #         file.close()
+        #         f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
+        #         user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
+        #     else:
+        #         return render_template('register.html', title='Регистрация',
+        #                                form=form,
+        #                                message="Файл не является изображением")
+        # else:
+        #     user.profile_image = '/static/profile_images/default.png'
+
+        f = form.profile_image.data
+        print(f)
+        f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
+        user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
         db_sess.commit()
         return redirect('/login')
@@ -167,7 +172,7 @@ def logout():
     return redirect("/")
 
 
-@app.route('/add_game', methods=['GET', 'POST'])
+@app.route('/game/add', methods=['GET', 'POST'])
 def add_game():
     form = AddGameForm()
     # if form.validate_on_submit():
