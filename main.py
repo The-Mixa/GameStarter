@@ -184,10 +184,18 @@ def add_game():
         game = Game(
             name=form.name.data,
             description=form.description.data,
-            author = current_user.id
+            author = current_user.id,
+            status = 0
         )
-        current_user.games.append(game)
-        db_sess.commit()
+        if form.github_link.data:
+            if form.github_link.data.startswith("https://github.com/"):
+                game.github_link = form.github_link.data
+            else:
+                return render_template('add_game.html', title='Добавление игры',
+                                       form=form,
+                                       message="Некорретная ссылка на github")
+        db_sess.add(game)
+        db_sess.commit() 
         return render_template('game_loaded.html', title='Игра добавлена')
     return render_template('add_game.html', title='Добавление игры', form=form)
 
