@@ -175,15 +175,20 @@ def logout():
 @app.route('/game/add', methods=['GET', 'POST'])
 def add_game():
     form = AddGameForm()
-    # if form.validate_on_submit():
-    #     db_sess = db_session.create_session()
-    #     game = Game(
-    #         title=form.title.data,
-    #         description=form.description.data
-    #     )
-    #     db_sess.add(game)
-    #     db_sess.commit()
-    #     return redirect(f'/game/{game.id}')
+    if form.validate_on_submit():   
+        db_sess = db_session.create_session()
+        if db_sess.query(Game).filter(Game.name == form.name.data).first():
+            return render_template('add_game.html', title='Добавление игры',
+                                   form=form,
+                                   message="Игра с таким названием уже существует")
+        game = Game(
+            name=form.name.data,
+            description=form.description.data,
+            author = current_user.id
+        )
+        current_user.games.append(game)
+        db_sess.commit()
+        return render_template('game_loaded.html', title='Игра добавлена')
     return render_template('add_game.html', title='Добавление игры', form=form)
 
 
