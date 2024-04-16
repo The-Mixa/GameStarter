@@ -11,6 +11,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from forms.profile_edit import ProfileEditForm
+from forms.add_game import AddGameForm
 
 
 app = Flask(__name__)
@@ -81,19 +82,24 @@ def reqister():
 
         user = db_sess.query(User).filter(User.nickname == form.nickname.data).first()
 
-        if 'file' in request.files:
-            f = request.files['file']
-            if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
-                file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
-                file.close()
-                f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
-                user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
-            else:
-                return render_template('register.html', title='Регистрация',
-                                       form=form,
-                                       message="Файл не является изображением")
-        else:
-            user.profile_image = '/static/profile_images/default.png'
+        # if 'file' in request.files:
+        #     f = request.files['file']
+        #     if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
+        #         file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
+        #         file.close()
+        #         f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
+        #         user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
+        #     else:
+        #         return render_template('register.html', title='Регистрация',
+        #                                form=form,
+        #                                message="Файл не является изображением")
+        # else:
+        #     user.profile_image = '/static/profile_images/default.png'
+
+        f = form.profile_image.data
+        print(f)
+        f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
+        user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
         db_sess.commit()
         return redirect('/login')
@@ -166,6 +172,26 @@ def logout():
     return redirect("/")
 
 
+@app.route('/game/add', methods=['GET', 'POST'])
+def add_game():
+    form = AddGameForm()
+    if form.validate_on_submit():   
+        db_sess = db_session.create_session()
+        if db_sess.query(Game).filter(Game.name == form.name.data).first():
+            return render_template('add_game.html', title='Добавление игры',
+                                   form=form,
+                                   message="Игра с таким названием уже существует")
+        game = Game(
+            name=form.name.data,
+            description=form.description.data,
+            author = current_user.id
+        )
+        current_user.games.append(game)
+        db_sess.commit()
+        return render_template('game_loaded.html', title='Игра добавлена')
+    return render_template('add_game.html', title='Добавление игры', form=form)
+
+
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:
     db_sess = db_session.create_session()
     comment = db_sess.query(Comment).filter(Comment.id == comment_id).first()
@@ -197,3 +223,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+ 

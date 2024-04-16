@@ -61,10 +61,15 @@
         {% endfor %}
         </p>
 
-        <div class="form-group">
-            <label for="photo">Выберите аватар</label>
-            <input type="file" class="form-control-file" id="file" name="file">
-        </div>
+        <p>
+            {{ form.profile_image.label }}<br>
+            {{ form.profile_image()}}<br>
+            {% for error in form.profile_image.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
 
         <p style="margin-top: 20px">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
         <p>Уже есть аккаунт? <a href="login">Войти</a></p>

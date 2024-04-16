@@ -20,10 +20,14 @@ class Game(SqlAlchemyBase, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     author = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    collaborators = orm.relationship('User', backref='game_when_collaborate', secondary="association")                     
-    is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    github_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)                  
     likes = sqlalchemy.Column(sqlalchemy.Integer)
     dislikes = sqlalchemy.Column(sqlalchemy.Integer)
+    photo = orm.relationship('Photo', back_populates='game')
+
+
     
     user = orm.relationship('User')
     comments = orm.relationship('Comment', back_populates='game')
