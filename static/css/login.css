@@ -10,7 +10,8 @@ h1 {
 .content {
     background-color: #444;
     max-width: 500px;
-    display: flexbox;
+    display: flex;
+    flex-direction: column;
     margin: auto;
     padding: 50px;
     color: lightgray;
