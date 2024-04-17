@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="carousel slide images-frame">
+    <div class="carousel-inner">
+        {% for photo in photos %}
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="{{ photo.path }}" alt="First slide">
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

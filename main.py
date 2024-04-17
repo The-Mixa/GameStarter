@@ -5,6 +5,7 @@ from data import db_session
 from data.users import User
 from data.games import Game
 from data.comments import Comment
+from data.photo import Photo
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -12,6 +13,9 @@ from forms.login import LoginForm
 from forms.user import RegisterForm
 from forms.profile_edit import ProfileEditForm
 from forms.add_game import AddGameForm
+
+from werkzeug.utils import secure_filename
+import os
 
 
 app = Flask(__name__)
@@ -50,7 +54,7 @@ def preview():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
+def register():
     form = RegisterForm()
     db_sess = db_session.create_session()
     if form.validate_on_submit():
@@ -96,7 +100,6 @@ def reqister():
         #     user.profile_image = '/static/profile_images/default.png'
 
         f = form.profile_image.data
-        print(f)
         f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
         user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
@@ -184,8 +187,26 @@ def add_game():
             name=form.name.data,
             description=form.description.data,
             author = current_user.id,
-            status = 0
+            in_moderate = 1
         )
+
+        db_sess.add(game)
+        db_sess.commit()
+        game = db_sess.query(Game).filter(Game.name.like(form.name.data)).first()
+
+        for number, file in enumerate(form.screenshots.data):
+            filename = file.filename
+            if filename.lower().endswith('.jpg') or filename.lower().endswith('.png'):
+                os.makedirs(fr'static/games_screenshots/{game.name}/')
+                file.save(fr'static/games_screenshots/{game.name}/{number}.{filename[-3:]}')
+                photo = Photo(path=fr'/static/games_screenshots/{game.name}/{number + 1}.{filename[-3:]}',
+                              parent_game=game.id)
+                game.photo.append(photo)
+            else:
+                return render_template('add_game.html', title='Добавление игры',
+                                       form=form,
+                                       message="Файл не является изображением")
+
         if form.github_link.data:
             if form.github_link.data.startswith("https://github.com/"):
                 game.github_link = form.github_link.data
@@ -193,10 +214,25 @@ def add_game():
                 return render_template('add_game.html', title='Добавление игры',
                                        form=form,
                                        message="Некорретная ссылка на github")
-        db_sess.add(game)
         db_sess.commit() 
         return render_template('game_loaded.html', title='Игра добавлена')
     return render_template('add_game.html', title='Добавление игры', form=form)
+
+
+@app.route('/moderation')
+def moderation():
+    db_sess = db_session.create_session()
+    games = db_sess.query(Game).filter(Game.in_moderate == True).all()
+    photos = [game.photo[0] for game in games]
+    return render_template('moderation.html', title='Модерация', games=games, photos=photos)
+
+
+@app.route('/game/<game_name>')
+def game_page(game_name):
+    db_sess = db_session.create_session()
+    game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
+    
+    return render_template('game_page.html', title=game.name, game=game, photos = game.photo)
 
 
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:

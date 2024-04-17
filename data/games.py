@@ -22,7 +22,7 @@ class Game(SqlAlchemyBase, SerializerMixin):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     github_link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)                  
+    in_moderate = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)                  
     likes = sqlalchemy.Column(sqlalchemy.Integer)
     dislikes = sqlalchemy.Column(sqlalchemy.Integer)
     photo = orm.relationship('Photo', back_populates='game')

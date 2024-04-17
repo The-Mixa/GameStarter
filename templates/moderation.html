@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="small-content">
+{% for game in games %}
+    <div class="game content">
+        <div class="image">
+            <img src="{{photos[loop.index0].path}}" alt="{{ game.title }}">
+        </div>
+        <div class="game-description">
+            <h1>{{game.name}}</h1>
+            <p>{{game.description[:40]}}...</p>
+        </div>
+        <div class="buttons-more">
+            <a href="/game/{{game.id}}" class="btn btn-secondary">Подробнее</a>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

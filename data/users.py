@@ -13,7 +13,7 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    role = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     favorites = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)

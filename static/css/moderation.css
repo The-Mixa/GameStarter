@@ -1,0 +1,27 @@
+.image img {
+    height: 100px;
+    margin: 20px;
+}
+
+.game{
+    display:inline-flex;
+    flex-direction: row;
+    background-color: #444;
+    margin: 30px;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.buttons-more{
+    margin: 20px;
+    width: 100%;
+    text-align: right;
+}
+
+.game h1{
+    margin: 20px;
+}
+
+.game p{
+    margin: 20px;
+}
