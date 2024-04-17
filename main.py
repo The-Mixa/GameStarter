@@ -84,20 +84,8 @@ def register():
         db_sess.commit()
 
         user = db_sess.query(User).filter(User.nickname == form.nickname.data).first()
-
-        # if 'file' in request.files:
-        #     f = request.files['file']
-        #     if f.filename.endswith('.jpg') or f.filename.endswith('.png'):
-        #         file = open(f'static/profile_images/{user.id}.{f.filename[-3:]}', 'a')
-        #         file.close()
-        #         f.save(f'static/profile_images/{user.id}.{f.filename[-3:]}')
-        #         user.profile_image = f'/static/profile_images/{user.id}.{f.filename[-3:]}'
-        #     else:
-        #         return render_template('register.html', title='Регистрация',
-        #                                form=form,
-        #                                message="Файл не является изображением")
-        # else:
-        #     user.profile_image = '/static/profile_images/default.png'
+        if user.id == 1:
+            user.is_moderate = True
 
         f = form.profile_image.data
         f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
