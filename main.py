@@ -104,7 +104,7 @@ def register():
         user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
         db_sess.commit()
-        return redirect('/login')
+        return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
 
 @app.route('/profile/<nickname>')
@@ -209,6 +209,12 @@ def add_game():
                 return render_template('add_game.html', title='Добавление игры',
                                        form=form,
                                        message="Файл не является изображением")
+        
+        game_files = form.game_files.data
+        filename = game_files.filename
+        file.save(fr'static/games/{game.name}/{game.name}.{filename[-3:]}')
+        game.game_files = fr'/static/games/{game.name}/{game.name}.{filename[-3:]}'
+            
 
         if form.github_link.data:
             if form.github_link.data.startswith("https://github.com/"):
