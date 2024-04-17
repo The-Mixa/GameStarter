@@ -1,14 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="carousel slide images-frame">
+<div class="name content">
+    <h1>{{game.name}}</h1>
+</div>
+
+<div div id="carouselExampleIndicators" class="carousel slide frame-image" data-ride="carousel">
+    <ol class="carousel-indicators">
+        {% for photo in photos %}
+        <li data-target="#carouselExampleIndicators" data-slide-to="{{loop.index0}}" {% if loop.first %}class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
     <div class="carousel-inner">
         {% for photo in photos %}
-            <div class="carousel-item active">
-                <img class="d-block w-100" src="{{ photo.path }}" alt="First slide">
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <img class="d-block w-100" src="{{ photo.path }}" alt="{{ loop.index0}} Slide">
             </div>
         {% endfor %}
     </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
 </div>
+
+<div class="content">
+    <p>{{ game.description }}</p>
+</div>
+
+<div class="content">
+    <a class="btn btn-primary" href="/profile/{{ author.nickname }}">Перейти к автору</a>
+    {% if game.in_moderate and current_user.is_moderator %}
+    <div class="buttons-end">
+        <a class="btn btn-success" href="/public-game/{{game.name}}">Опубликовать игру</a>
+        <a class="btn btn-danger" href="/public-game/{{game.name}}">Отправить на доработку</a>
+    </div>
+    {% endif %}
+</div>
+
+
 
 {% endblock %}

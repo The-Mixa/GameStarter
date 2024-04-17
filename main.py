@@ -197,7 +197,10 @@ def add_game():
         for number, file in enumerate(form.screenshots.data):
             filename = file.filename
             if filename.lower().endswith('.jpg') or filename.lower().endswith('.png'):
-                os.makedirs(fr'static/games_screenshots/{game.name}/')
+                try:
+                    os.mkdir(fr'static/games_screenshots/{game.name}/')
+                except Exception:
+                    pass
                 file.save(fr'static/games_screenshots/{game.name}/{number}.{filename[-3:]}')
                 photo = Photo(path=fr'/static/games_screenshots/{game.name}/{number + 1}.{filename[-3:]}',
                               parent_game=game.id)
@@ -231,8 +234,7 @@ def moderation():
 def game_page(game_name):
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
-    
-    return render_template('game_page.html', title=game.name, game=game, photos = game.photo)
+    return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user)
 
 
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:

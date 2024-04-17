@@ -1,0 +1,22 @@
+.frame-image img{
+    height: 600px;
+}
+
+.content{
+    padding: 20px;
+    border-radius: 20px;
+    margin: 10px;
+    background-color: #444;
+    display: flex;
+    justify-content: space-between;
+}
+
+.content h1{
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.content p{
+    font-size: 20px;
+}
