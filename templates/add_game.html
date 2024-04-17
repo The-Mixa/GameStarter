@@ -42,6 +42,15 @@
             </p>
             {% endfor %}
         </p>
+        <p>
+            {{ form.game_files.label }}<br>
+            {{ form.game_files()}}<br>
+            {% for error in form.game_files.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </p>
         <p>{{ form.submit(type="submit", class="btn btn-dark") }}</p>
         {{ message }}
     </form>

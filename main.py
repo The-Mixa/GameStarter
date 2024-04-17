@@ -104,7 +104,7 @@ def register():
         user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
         db_sess.commit()
-        return redirect('/login')
+        return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
 
 @app.route('/profile/<nickname>')
@@ -197,15 +197,21 @@ def add_game():
         for number, file in enumerate(form.screenshots.data):
             filename = file.filename
             if filename.lower().endswith('.jpg') or filename.lower().endswith('.png'):
-                os.makedirs(fr'static/games_screenshots/{game.name}/')
-                file.save(fr'static/games_screenshots/{game.name}/{number}.{filename[-3:]}')
-                photo = Photo(path=fr'/static/games_screenshots/{game.name}/{number + 1}.{filename[-3:]}',
+                os.makedirs(fr'static/games/{game.name}/screenshots')
+                file.save(fr'static/games/{game.name}/screenshots/{number}.{filename[-3:]}')
+                photo = Photo(path=fr'/static/games/{game.name}/screenshots/{number + 1}.{filename[-3:]}',
                               parent_game=game.id)
                 game.photo.append(photo)
             else:
                 return render_template('add_game.html', title='Добавление игры',
                                        form=form,
                                        message="Файл не является изображением")
+        
+        game_files = form.game_files.data
+        filename = game_files.filename
+        file.save(fr'static/games/{game.name}/{game.name}.{filename[-3:]}')
+        game.game_files = fr'/static/games/{game.name}/{game.name}.{filename[-3:]}'
+            
 
         if form.github_link.data:
             if form.github_link.data.startswith("https://github.com/"):
