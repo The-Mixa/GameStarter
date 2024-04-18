@@ -5,7 +5,7 @@
     <h1>{{game.name}}</h1>
 </div>
 
-<div div id="carouselExampleIndicators" class="carousel slide frame-image" data-ride="carousel">
+<div div id="carouselExampleIndicators" class="carousel slide frame-image content" data-ride="carousel">
     <ol class="carousel-indicators">
         {% for photo in photos %}
         <li data-target="#carouselExampleIndicators" data-slide-to="{{loop.index0}}" {% if loop.first %}class="active"{% endif %}></li>
@@ -39,6 +39,11 @@
     <div class="buttons-end">
         <a class="btn btn-success" href="/public-game-access/{{game.name}}">Опубликовать игру</a>
         <a class="btn btn-danger" href="/block-game-access/{{game.name}}">Отправить на доработку</a>
+    </div>
+    {% endif %}
+    {% if not game.in_moderate and current_user.is_moderator %}
+    <div class="buttons-end">
+        <a class="btn btn-danger" href="/block-game-access/{{game.name}}">Удалить из общего доступа</a>
     </div>
     {% endif %}
 </div>

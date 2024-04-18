@@ -102,6 +102,8 @@ def register():
 
 @app.route('/profile/<nickname>')
 def profile(nickname: str):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.nickname == nickname).first()
     return render_template('profile.html', title='Профиль', user=user)
@@ -109,6 +111,8 @@ def profile(nickname: str):
 
 @app.route('/profile/edit', methods=['POST', 'GET'])
 def profile_edit():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     form = ProfileEditForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -169,6 +173,8 @@ def logout():
 
 @app.route('/game/add', methods=['GET', 'POST'])
 def add_game():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     form = AddGameForm()
     if form.validate_on_submit():   
         db_sess = db_session.create_session()
@@ -228,6 +234,8 @@ def add_game():
 
 @app.route('/moderation')
 def moderation():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     db_sess = db_session.create_session()
     games = db_sess.query(Game).filter(Game.in_moderate == True).all()
     photos = [game.photo[0] for game in games]
@@ -236,6 +244,8 @@ def moderation():
 
 @app.route('/game/<game_name>')
 def game_page(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user)
@@ -243,16 +253,22 @@ def game_page(game_name):
 
 @app.route('/public-game-access/<game_name>')
 def access_public_game(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     return render_template('access.html', type='public', game_name=game_name)
 
 
 @app.route('/block-game-access/<game_name>')
 def access_block_game(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     return render_template('access.html', type='block', game_name=game_name)
 
 
 @app.route('/public-game/<game_name>')
 def public_game(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     if not current_user.is_moderator:
         return """<h1>You have not permissions to access this"""
     db_sess = db_session.create_session()
@@ -270,6 +286,8 @@ def public_game(game_name):
 
 @app.route('/block-game/<game_name>')
 def block_game(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
     if not current_user.is_moderator:
         return """<h1>You have not permissions to access this"""
     db_sess = db_session.create_session()
