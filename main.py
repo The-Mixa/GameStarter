@@ -14,6 +14,7 @@ from forms.login import LoginForm
 from forms.user import RegisterForm
 from forms.profile_edit import ProfileEditForm
 from forms.add_game import AddGameForm
+from forms.make_comment import MakeCommentForm
 
 from werkzeug.utils import secure_filename
 import os
@@ -93,8 +94,9 @@ def register():
             user.is_moderator = True
 
         f = form.profile_image.data
-        f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
-        user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
+        if f:
+            f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
+            user.profile_image = fr'/static/profile_images/{user.id}{f.filename[-4:]}'
 
         db_sess.commit()
         return redirect('/')
@@ -242,14 +244,40 @@ def moderation():
     return render_template('moderation.html', title='Модерация', games=games, photos=photos)
 
 
-@app.route('/game/<game_name>')
+@app.route('/game/<game_name>', methods=['GET', 'POST'])
 def game_page(game_name):
     if not current_user.is_authenticated:
         return redirect('/preview')
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
-    return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user)
+    make_comment_form = MakeCommentForm()
+    comments = db_sess.query(Comment).filter(Comment.gameid == game.id)
+    if game.in_moderate == 1 and not current_user.is_moderator:
+        return """<h1>You have not permissions to access this"""
+    if make_comment_form.validate_on_submit():
+        comment = Comment(
+            text=make_comment_form.text.data,
+            gameid=game.id,
+            userid=current_user.id
+        )
+        db_sess.add(comment)
+        db_sess.commit()
+        return redirect(f'/game/{game_name}')
+    return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user, form=make_comment_form, comments=comments)
 
+
+@app.route('/delete_comment/<int:comment_id>')
+def delete_comment(comment_id):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    db_sess = db_session.create_session()
+    comment = db_sess.query(Comment).filter(Comment.id == comment_id).first()
+    if comment.user.id != current_user.id or not current_user.is_moderator:
+        return """<h1>You have not permissions to access this"""
+    game_name = comment.game.name
+    db_sess.delete(comment)
+    db_sess.commit()
+    return redirect(f'/game/{game_name}')
 
 @app.route('/public-game-access/<game_name>')
 def access_public_game(game_name):

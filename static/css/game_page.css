@@ -20,3 +20,21 @@
 .content p{
     font-size: 20px;
 }
+.comments-block{
+    padding: 20px;
+    border-radius: 20px;
+    margin: 10px;
+    background-color: #444;
+    justify-content: space-between;
+}
+.comment{
+    padding: 20px;
+    border-radius: 20px;
+    margin: 10px;
+    background-color: #777777;
+    justify-content: space-between;
+    width: 75%;
+}
+.comment h2, h6{
+    display: inline;
+}

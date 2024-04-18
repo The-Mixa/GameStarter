@@ -13,8 +13,6 @@ class Comment(SqlAlchemyBase, SerializerMixin):
     userid = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     gameid = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("games.id"))
     text = sqlalchemy.Column(sqlalchemy.Text)
-    likes = sqlalchemy.Column(sqlalchemy.Integer)
-    dislikes = sqlalchemy.Column(sqlalchemy.Integer)
 
     user = orm.relationship('User')
     game = orm.relationship('Game')
