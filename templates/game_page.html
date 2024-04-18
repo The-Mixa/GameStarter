@@ -37,12 +37,10 @@
     <a class="btn btn-primary" href="/profile/{{ author.nickname }}">Перейти к автору</a>
     {% if game.in_moderate and current_user.is_moderator %}
     <div class="buttons-end">
-        <a class="btn btn-success" href="/public-game/{{game.name}}">Опубликовать игру</a>
-        <a class="btn btn-danger" href="/public-game/{{game.name}}">Отправить на доработку</a>
+        <a class="btn btn-success" href="/public-game-access/{{game.name}}">Опубликовать игру</a>
+        <a class="btn btn-danger" href="/block-game-access/{{game.name}}">Отправить на доработку</a>
     </div>
     {% endif %}
 </div>
-
-
 
 {% endblock %}

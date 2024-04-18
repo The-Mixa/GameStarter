@@ -6,6 +6,7 @@ from data.users import User
 from data.games import Game
 from data.comments import Comment
 from data.photo import Photo
+from data.notifications import Notification
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -45,7 +46,11 @@ def load_user(user_id):
 def index():
     if not current_user.is_authenticated:
         return redirect('/preview')
-    return render_template('index.html', title='GameStarter')
+    
+    db_sess = db_session.create_session()
+    games = db_sess.query(Game).filter(Game.in_moderate == False).all()
+    photos = [game.photo[0] for game in games]
+    return render_template('moderation.html', title='GameStarter', games=games, photos=photos)
         
 
 @app.route('/preview')
@@ -85,7 +90,7 @@ def register():
 
         user = db_sess.query(User).filter(User.nickname == form.nickname.data).first()
         if user.id == 1:
-            user.is_moderate = True
+            user.is_moderator = True
 
         f = form.profile_image.data
         f.save(fr'static/profile_images/{user.id}{f.filename[-4:]}')
@@ -236,13 +241,49 @@ def game_page(game_name):
     return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user)
 
 
+@app.route('/public-game-access/<game_name>')
+def access_public_game(game_name):
+    return render_template('access.html', type='public', game_name=game_name)
+
+
+@app.route('/block-game-access/<game_name>')
+def access_block_game(game_name):
+    return render_template('access.html', type='block', game_name=game_name)
+
+
 @app.route('/public-game/<game_name>')
 def public_game(game_name):
+    if not current_user.is_moderator:
+        return """<h1>You have not permissions to access this"""
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
-    game.is_moderate = False
+    game.in_moderate = 0
+    notification = Notification(
+        game_name=game_name,
+        for_user=game.author,
+        status_nice=1
+    )
+    game.user.notifications.append(notification)
     db_sess.commit()
     return render_template('public_game.html', title="Публикация")
+
+
+@app.route('/block-game/<game_name>')
+def block_game(game_name):
+    if not current_user.is_moderator:
+        return """<h1>You have not permissions to access this"""
+    db_sess = db_session.create_session()
+    game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
+    db_sess.delete(game)
+    notification = Notification(
+        game_name=game_name,
+        for_user=game.author,
+        status_nice=0
+    )
+    game.user.notifications.append(notification)
+    db_sess.commit()
+    return render_template('block_game.html', title='Удаление игры')
+
 
 
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:
