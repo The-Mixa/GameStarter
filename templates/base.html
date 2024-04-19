@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/moderation.css">
     <link rel="stylesheet" href="/static/css/game_page.css">    
+    <link rel="stylesheet" href="/static/css/notificatons.css">    
+
     <title>{{ title }}</title>
 </head>
 <body>
@@ -37,6 +39,9 @@
                     </li>
                     <li>
                         <a class="nav-link active" aria-current="page" href="/">Все игры</a>
+                    </li>
+                    <li>
+                            <a class="nav-link active" aria-current="page" href="/notifications">Уведомления</a>
                     </li>
                     {% if current_user.is_moderator %}
                     <li class="nav-item">

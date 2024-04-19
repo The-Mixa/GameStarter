@@ -111,6 +111,15 @@ def profile(nickname: str):
     return render_template('profile.html', title='Профиль', user=user)
 
 
+@app.route('/notifications')
+def notifications():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    notifications = current_user.notifications
+    notifications.sort(key=lambda x: x.created_date)
+    return render_template('notifications.html', title='Уведомления', notifications=notifications)
+
+
 @app.route('/profile/edit', methods=['POST', 'GET'])
 def profile_edit():
     if not current_user.is_authenticated:
@@ -363,4 +372,3 @@ def main():
 
 if __name__ == '__main__':
     main()
- 
