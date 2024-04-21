@@ -111,7 +111,9 @@ def profile(nickname: str):
         return redirect('/preview')
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.nickname == nickname).first()
-    return render_template('profile.html', title='Профиль', user=user)
+    games = db_sess.query(Game).filter(Game.author == user.id)
+    photos = [game.photo[0] for game in games]
+    return render_template('profile.html', title='Профиль', user=user, games=games, photos=photos)
 
 
 @app.route('/notifications')

@@ -6,7 +6,7 @@
     <div class="buttons-end">
         {% if not game.id|string in current_user.favorites and not game.in_moderate %}
             <a href="/add_to_favourite/{{game.name}}" class="btn btn-primary">Добавить в избранное</a>
-        {% else %}
+        {% elif game.id|string in current_user.favorites and not game.in_moderate %}
             <a href="/delete_from_favourite/{{game.name}}" class="btn btn-danger">Удалить из избранного</a>
         {% endif %}
 

@@ -37,6 +37,22 @@
         <h3>Игры</h3>
         {% endif %}
     </div>
+    <div>
+        {% for game in games %}
+        <div class="content game">
+            <div class="image">
+                <img src="{{photos[loop.index0].path}}" alt="{{ game.title }}">
+            </div>
+            <div class="game-description">
+                <h1>{{game.name}}</h1>
+                <p>{{game.description[:40]}}...</p>
+            </div>
+            <div class="buttons-more">
+                <a href="/game/{{ game.name }}" class="btn btn-secondary">Подробнее</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endif %}
 
