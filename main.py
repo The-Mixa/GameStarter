@@ -61,6 +61,8 @@ def preview():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        redirect('/')
     form = RegisterForm()
     db_sess = db_session.create_session()
     if form.validate_on_submit():
@@ -82,7 +84,8 @@ def register():
         user = User(
             name=f'{form.name.data} {form.surname.data}',
             email=form.email.data,
-            nickname=form.nickname.data
+            nickname=form.nickname.data,
+            favorites = ''
         )
 
         user.set_password(form.password.data)
@@ -161,6 +164,8 @@ def profile_edit():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect('/')
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
