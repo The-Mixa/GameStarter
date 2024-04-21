@@ -19,10 +19,14 @@ from forms.make_comment import MakeCommentForm
 from werkzeug.utils import secure_filename
 import os
 
+from flask_restful import Api
+from data import users_api
+from data import games_api
+
 
 app = Flask(__name__)
+api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -410,6 +414,8 @@ def make_reaction_to_game(game_id: int, user_id: int, type: str) -> None:
 
 def main():
     db_session.global_init("db/games.sqlite")
+    app.register_blueprint(games_api.blueprint)
+    app.register_blueprint(users_api.blueprint)
     app.run('127.0.0.1', port=800, debug=True)
 
 
