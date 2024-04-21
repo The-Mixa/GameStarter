@@ -66,7 +66,8 @@ def preview():
 @app.route('/shlack')
 def shlack():
     return """<h1>Пайгейm для лохов</h1>
-            <img src="https://i.ytimg.com/vi/GTLAPx5wX30/maxresdefault.jpg"> """
+            <img src="https://i.ytimg.com/vi/GTLAPx5wX30/maxresdefault.jpg">
+            <img src="https://i.ytimg.com/vi/YCYqpJp3JdU/maxresdefault.jpg">"""
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
