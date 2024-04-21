@@ -281,7 +281,7 @@ def delete_comment(comment_id):
         return redirect('/preview')
     db_sess = db_session.create_session()
     comment = db_sess.query(Comment).filter(Comment.id == comment_id).first()
-    if comment.user.id != current_user.id or not current_user.is_moderator:
+    if comment.user.id != current_user.id and not current_user.is_moderator:
         return """<h1>You have not permissions to access this"""
     game_name = comment.game.name
     db_sess.delete(comment)
@@ -339,6 +339,42 @@ def block_game(game_name):
     db_sess.commit()
     return render_template('block_game.html', title='Удаление игры')
 
+
+@app.route('/favourites')
+def favorites():
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    db_sess = db_session.create_session()
+    favourites = current_user.favorites
+    games = db_sess.query(Game).filter(Game.in_moderate == False).all()
+    photos = [game.photo[0] for game in games]
+    return render_template('favourites.html', title='Избранное', games=games, photos=photos)
+
+
+@app.route('/add_to_favourite/<game_name>')
+def add_to_fovorite(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    db_sess = db_session.create_session()
+    game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
+    if not game.name or game.in_moderate:
+        return """<h1>Такой игры не существует или она находится в модерации"""
+    game.user.favorites += str(game.id) + ' '
+    db_sess.commit()
+    return redirect(f'/game/{game_name}')
+
+
+@app.route('/delete_from_favourite/<game_name>')
+def delete_from_favorite(game_name):
+    if not current_user.is_authenticated:
+        return redirect('/preview')
+    db_sess = db_session.create_session()
+    game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
+    if not game.name or game.in_moderate:
+        return """<h1>Такой игры не существует или она находится в модерации"""
+    game.user.favorites = game.user.favorites.replace(str(game.id) + ' ','')
+    db_sess.commit()
+    return redirect(f'/game/{game_name}')
 
 
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:

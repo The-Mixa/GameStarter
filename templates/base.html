@@ -41,11 +41,14 @@
                         <a class="nav-link active" aria-current="page" href="/">Все игры</a>
                     </li>
                     <li>
-                            <a class="nav-link active" aria-current="page" href="/notifications">Уведомления</a>
+                        <a class="nav-link active" aria-current="page" href="/notifications">Уведомления</a>
+                    </li>
+                    <li>
+                        <a class="nav-link active" aria-current="page" href="/favourites">Избранные игры</a>
                     </li>
                     {% if current_user.is_moderator %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/moderation">Модерация</a>
+                        <a class="nav-link active" aria-current="page" href="/moderation" style="color: yellow">Модерация</a>
                     </li>
                     {% endif %}
                 </ul>
