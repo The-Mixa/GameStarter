@@ -4,7 +4,7 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
-
+# второстепенная таблица для того, чтобы сохранить связь многие-ко-многим
 association_table = sqlalchemy.Table(
     'association',
     SqlAlchemyBase.metadata,
@@ -14,6 +14,7 @@ association_table = sqlalchemy.Table(
                       sqlalchemy.ForeignKey('games.id'))
 )
 
+# id, id_пользователя, название, описание, ссылка на гитхаб, отображение(модерация), файлы игры, лайки, дизлайки, фото
 class Game(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'games'
 

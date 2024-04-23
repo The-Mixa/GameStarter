@@ -3,7 +3,8 @@ from wtforms import EmailField, PasswordField, BooleanField, SubmitField, String
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileAllowed
 
-
+# добавление новой игры
+# имя, описение и различные файлы
 class AddGameForm(FlaskForm):
     name = StringField('Название игры', validators=[DataRequired()])
     description = TextAreaField('Описание игры', validators=[DataRequired()])

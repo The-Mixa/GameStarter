@@ -7,6 +7,7 @@ from sqlalchemy_serializer import SerializerMixin
 from flask_login import UserMixin
 
 
+# id, имя пользователя, никнейм, модератор, избраное, email, пароль, аватарка
 class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     __tablename__ = 'users'
 

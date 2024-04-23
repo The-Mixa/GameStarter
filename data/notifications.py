@@ -6,7 +6,7 @@ from sqlalchemy_serializer import SerializerMixin
 
 from datetime import datetime
 
-
+# id, id_пользователя, название игры, тип уведомления, дата создания
 class Notification(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'notifications'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)

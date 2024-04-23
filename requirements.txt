@@ -6,3 +6,4 @@ SQLAlchemy
 Werkzeug
 WTForms
 SQLAlchemy-serializer
+flask-restful

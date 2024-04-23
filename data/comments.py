@@ -6,6 +6,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 
+# id, id_пользователя, id_игры, текст комментария
 class Comment(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'comments'
 

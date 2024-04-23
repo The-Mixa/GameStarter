@@ -5,6 +5,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 
+# id, путь до файла, id игры
 class Photo(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'photo'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
