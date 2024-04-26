@@ -17,7 +17,7 @@ def get_users():
     s = []
     for item in users:
         user = item.to_dict(only=('id', 'name', 'nickname', 'is_moderator', 'email'))
-        user['games'] = [{'id': game.id, 'name': game.name} for game in user['games']]
+        user['games'] = [{'id': game.id, 'name': game.name} for game in item.games]
         s += [user]
     
     return jsonify(
@@ -31,11 +31,11 @@ def get_users():
 @blueprint.route('/api/users/<int:user_id>', methods=['GET'])
 def get_one_user(user_id):
     db_sess = db_session.create_session()
-    user = db_sess.query(User).get(user_id)
-    if not user:
+    item = db_sess.query(User).get(user_id)
+    if not item:
         return make_response(jsonify({'error': 'Not found'}), 404)
+    user = item.to_dict(only=('id', 'name', 'nickname', 'is_moderator', 'email'))
+    user['games'] = [{'id': game.id, 'name': game.name} for game in item.games]
     return jsonify(
-        {'user': user.to_dict(
-                    only=('id', 'name', 'nickname', 'is_moderator', 'email')) \
-                        | {'games': [{'id': game.id, 'name': game.name} for game in user.games]}}
+        {'user': user}
     )
