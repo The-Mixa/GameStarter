@@ -14,12 +14,16 @@ blueprint = Blueprint(
 def get_users():
     db_sess = db_session.create_session()
     users = db_sess.query(User).all()
+    s = []
+    for item in users:
+        user = item.to_dict(only=('id', 'name', 'nickname', 'is_moderator', 'email'))
+        user['games'] = [{'id': game.id, 'name': game.name} for game in user['games']]
+        s += [user]
+    
     return jsonify(
         {
-            'users':
-                [item.to_dict(
-                    only=('id', 'name', 'nickname', 'is_moderator', 'email')
-                ) | {'games': [{'id': game.id, 'name': game.name} for game in item.games]} for item in users]
+            'users': s
+                
         }
     )
 
