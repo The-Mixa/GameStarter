@@ -335,7 +335,7 @@ def delete_comment(comment_id):
     db_sess = db_session.create_session()
     comment = db_sess.query(Comment).filter(Comment.id == comment_id).first()
     if comment.user.id != current_user.id and not current_user.is_moderator:
-        return """<h1>You have not permissions to access this"""
+        return render_template('not_permission.html', title='уходи')
     game_name = comment.game.name
     db_sess.delete(comment)
     db_sess.commit()
@@ -364,7 +364,7 @@ def public_game(game_name):
     if not current_user.is_authenticated:
         return redirect('/preview')
     if not current_user.is_moderator:
-        return """<h1>You have not permissions to access this"""
+        return render_template('not_permission.html', title='уходи')
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     game.in_moderate = 0
@@ -386,7 +386,7 @@ def block_game(game_name):
     if not current_user.is_authenticated:
         return redirect('/preview')
     if not current_user.is_moderator:
-        return """<h1>You have not permissions to access this"""
+        return render_template('not_permission.html', title='уходи')
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     db_sess.delete(game)
@@ -421,7 +421,7 @@ def add_to_fovorite(game_name):
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     if not game.name or game.in_moderate:
-        return """<h1>Такой игры не существует или она находится в модерации"""
+        return render_template('not_permission.html', title='уходи')
     game.user.favorites += str(game.id) + ' '
     db_sess.commit()
     return redirect(f'/game/{game_name}')
@@ -435,10 +435,11 @@ def delete_from_favorite(game_name):
     db_sess = db_session.create_session()
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     if not game.name or game.in_moderate:
-        return """<h1>Такой игры не существует или она находится в модерации"""
+        return render_template('not_permission.html', title='уходи')
     game.user.favorites = game.user.favorites.replace(str(game.id) + ' ','')
     db_sess.commit()
     return redirect(f'/game/{game_name}')
+
 
 # поставить лайк комментарию(неопубликованная функция)
 def make_reaction_to_comment(comment_id: int, user_id: int, type: str) -> None:
