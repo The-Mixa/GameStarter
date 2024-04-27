@@ -9,6 +9,7 @@ blueprint = Blueprint(
     template_folder='templates'
 )
 
+
 @blueprint.route('/api/games')
 def get_jobs():
     db_sess = db_session.create_session()
@@ -32,5 +33,5 @@ def get_one_job(game_id):
         return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
         {'game': game.to_dict(only=('id', 'author', 'name', 'description',
-                          'github_link'))}
+                                    'github_link'))}
     )

@@ -12,4 +12,3 @@ class Photo(SqlAlchemyBase, SerializerMixin):
     path = sqlalchemy.Column(sqlalchemy.String)
     parent_game = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("games.id"))
     game = orm.relationship('Game')
-

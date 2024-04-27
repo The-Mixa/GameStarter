@@ -19,11 +19,11 @@ def get_users():
         user = item.to_dict(only=('id', 'name', 'nickname', 'is_moderator', 'email'))
         user['games'] = [{'id': game.id, 'name': game.name} for game in item.games]
         s += [user]
-    
+
     return jsonify(
         {
             'users': s
-                
+
         }
     )
 

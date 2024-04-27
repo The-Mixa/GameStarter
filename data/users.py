@@ -22,7 +22,7 @@ class User(SqlAlchemyBase, SerializerMixin, UserMixin):
     profile_image = sqlalchemy.Column(sqlalchemy.String, default='/static/profile_images/default.png')
 
     notifications = orm.relationship('Notification', back_populates='user')
-    
+
     games = orm.relationship("Game", back_populates='user')
     comments = orm.relationship('Comment', back_populates='user')
 

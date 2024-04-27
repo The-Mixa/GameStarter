@@ -55,20 +55,21 @@ def load_user(user_id):
 def index():
     if not current_user.is_authenticated:
         return redirect('/preview')
-    
+
     db_sess = db_session.create_session()
     games = db_sess.query(Game).filter(Game.in_moderate == False).all()
     photos = [game.photo[0] for game in games]
     return render_template('moderation.html', title='GameStarter', games=games, photos=photos)
-        
+
 
 # предпросмотр для неавторизированных пользователей
 @app.route('/preview')
 def preview():
-    return render_template('preview.html', title='Обзор')\
-    
+    return render_template('preview.html', title='Обзор') \
+ \
+        # пасхалка
 
-# пасхалка
+
 @app.route('/shlack')
 def shlack():
     return """<h1>Пайгейm для лохов</h1>
@@ -90,7 +91,7 @@ def register():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Пароли не совпадают")
-        
+
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация',
                                    form=form,
@@ -106,7 +107,7 @@ def register():
             name=f'{form.name.data} {form.surname.data}',
             email=form.email.data,
             nickname=form.nickname.data,
-            favorites = ''
+            favorites=''
         )
 
         # пароль
@@ -139,7 +140,7 @@ def profile(nickname: str):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.nickname == nickname).first()  # пользовательь
     games = db_sess.query(Game).filter(Game.author == user.id)  # игры пользователя
-    photos = [game.photo[0] for game in games] # картинки игр
+    photos = [game.photo[0] for game in games]  # картинки игр
     return render_template('profile.html', title='Профиль', user=user, games=games, photos=photos)
 
 
@@ -167,21 +168,21 @@ def profile_edit():
         form.email.data = user.email
         form.nickname.data = user.nickname
 
-    if form.validate_on_submit(): # изменение данных пользователя
+    if form.validate_on_submit():  # изменение данных пользователя
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.id == current_user.id).first()
         # проверка на корректность введенных данных
         if form.email.data != user.email:
             if db_sess.query(User).filter(User.email == form.email.data).first():
                 return render_template('edit_profile.html', title='Редактирование профиля',
-                                    form=form,
-                                    message="Такой пользователь уже есть, выберите другую почту")
+                                       form=form,
+                                       message="Такой пользователь уже есть, выберите другую почту")
         if form.nickname.data != user.nickname:
             if db_sess.query(User).filter(User.nickname == form.nickname.data).first():
                 return render_template('edit_profile.html', title='Редактирование профиля',
-                                    form=form,
-                                    message="Пользователь с таким никнеймом уже есть")
-        
+                                       form=form,
+                                       message="Пользователь с таким никнеймом уже есть")
+
         # изменение данных пользователя
         user = db_sess.query(User).filter(User.id == current_user.id).first()
         user.name = f'{form.name.data} {form.surname.data}'
@@ -200,7 +201,7 @@ def profile_edit():
 def login():
     if current_user.is_authenticated:
         return redirect('/')
-    form = LoginForm() # форма авторизации
+    form = LoginForm()  # форма авторизации
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(
@@ -227,8 +228,8 @@ def logout():
 def add_game():
     if not current_user.is_authenticated:
         return redirect('/preview')
-    form = AddGameForm() # форма добавления игры
-    if form.validate_on_submit():   
+    form = AddGameForm()  # форма добавления игры
+    if form.validate_on_submit():
         db_sess = db_session.create_session()
         # проверка корректности введенных данных
         if db_sess.query(Game).filter(Game.name == form.name.data).first():
@@ -239,8 +240,8 @@ def add_game():
         game = Game(
             name=form.name.data,
             description=form.description.data,
-            author = current_user.id,
-            in_moderate = 1
+            author=current_user.id,
+            in_moderate=1
         )
 
         db_sess.add(game)
@@ -259,7 +260,7 @@ def add_game():
                     os.mkdir(fr'static/games/{game.name}/screenshots/')
                 except Exception:
                     pass
-                
+
                 file.save(fr'static/games/{game.name}/screenshots/{number + 1}.{filename[-3:]}')
                 photo = Photo(path=fr'/static/games/{game.name}/screenshots/{number + 1}.{filename[-3:]}',
                               parent_game=game.id)
@@ -273,7 +274,6 @@ def add_game():
         filename = game_files.filename
         file.save(fr'static/games/{game.name}/{game.name}.{filename[-3:]}')
         game.game_files = fr'/static/games/{game.name}/{game.name}.{filename[-3:]}'
-            
 
         if form.github_link.data:
             if form.github_link.data.startswith("https://github.com/"):
@@ -282,7 +282,7 @@ def add_game():
                 return render_template('add_game.html', title='Добавление игры',
                                        form=form,
                                        message="Некорретная ссылка на github")
-        db_sess.commit() 
+        db_sess.commit()
         return render_template('game_loaded.html', title='Игра добавлена')
     return render_template('add_game.html', title='Добавление игры', form=form)
 
@@ -295,11 +295,12 @@ def moderation():
 
     if not current_user.is_moderator:
         return render_template('not_permission.html', title='уходи')
-    
+
     db_sess = db_session.create_session()
     games = db_sess.query(Game).filter(Game.in_moderate == True).all()
     photos = [game.photo[0] for game in games]
     return render_template('moderation.html', title='Модерация', games=games, photos=photos)
+
 
 # страница игры
 @app.route('/game/<game_name>', methods=['GET', 'POST'])
@@ -313,7 +314,7 @@ def game_page(game_name):
     comments = db_sess.query(Comment).filter(Comment.gameid == game.id)
     if game.in_moderate == 1 and not current_user.is_moderator:
         return render_template('not_permission.html', title='уходи')
-    
+
     # cнова комментарии
     if make_comment_form.validate_on_submit():
         comment = Comment(
@@ -324,7 +325,8 @@ def game_page(game_name):
         db_sess.add(comment)
         db_sess.commit()
         return redirect(f'/game/{game_name}')
-    return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user, form=make_comment_form, comments=comments)
+    return render_template('game_page.html', title=game.name, game=game, photos=game.photo, author=game.user,
+                           form=make_comment_form, comments=comments)
 
 
 # удаление комментариев
@@ -436,7 +438,7 @@ def delete_from_favorite(game_name):
     game = db_sess.query(Game).filter(Game.name.like(game_name)).first()
     if not game.name or game.in_moderate:
         return render_template('not_permission.html', title='уходи')
-    game.user.favorites = game.user.favorites.replace(str(game.id) + ' ','')
+    game.user.favorites = game.user.favorites.replace(str(game.id) + ' ', '')
     db_sess.commit()
     return redirect(f'/game/{game_name}')
 
